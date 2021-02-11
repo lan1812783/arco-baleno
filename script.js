@@ -23,8 +23,24 @@ const size = carouselImages[0].width;
 // Because the first image is the clone of the last slide's image, so this line helps move to the actual first slide which contains the second image
 carouselSlide.style.transform = `translate(${-size * counter}px)`;
 
+// Automatic slideing carousel
+const automate = () => {
+  return setInterval(() => {
+    if (counter < carouselImages.length - 1) {
+      setTimeout(() => {
+        counter += 1;
+        carouselSlide.style.transition = "all 0.5s ease-in-out";
+        carouselSlide.style.transform = `translate(${-size * counter}px)`;
+      }, 0);
+    }
+  }, 2000);
+}
+let automationInterval = automate();
+
 prevBtn.addEventListener("click", () => {
-  if (counter === 0) return;
+  clearInterval(automationInterval);
+  automationInterval = automate();
+  if (counter <= 0) return;
 
   counter -= 1;
   carouselSlide.style.transition = "all 0.5s ease-in-out";
@@ -32,7 +48,9 @@ prevBtn.addEventListener("click", () => {
 });
 
 nextBtn.addEventListener("click", () => {
-  if (counter === carouselImages.length - 1) return;
+  clearInterval(automationInterval);
+  automationInterval = automate();
+  if (counter >= carouselImages.length - 1) return;
 
   counter += 1;
   carouselSlide.style.transition = "all 0.5s ease-in-out";
